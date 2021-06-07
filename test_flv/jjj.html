@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <link rel="stylesheet" href="">
+    <style type="text/css">
+        .screen_shot_btn,.screen_save_btn{display: inline-block;width: 72px;height: 36px;text-align: center;line-height: 36px;text-decoration: none;background: #4473C2;border: none;border-radius: 8px;margin:0 5px;color:#fff;outline: none;}
+        .btn-wrap{margin:15px 0;}
+        .img_show_wrap{width: 720px;height: 450px;margin:15px 0;position:relative;}
+        #image_el,#V2I_canvas{position:absolute;width: 720px;height: 450px;top:0;left:0;}
+    </style>
+</head>
+<body>
+        <div class="btn-wrap">
+            <a id="screen_shot_btn"  class="screen_shot_btn" href="javascript:">截图</a>
+            <a id="screen_save_btn" class="screen_save_btn" href="javascript:">下载</a>
+        </div>
+        <div class="video_wrap">
+            <video id="video_el"  crossorigin="*" width="720" height="450"></video>
+        </div>
+ 
+        <div class="img_show_wrap">
+            <canvas width="720" height="450" id="V2I_canvas" ></canvas>
+            <img id="image_el" src="" alt="">
+        </div>
+        <!-- <script src="js/jquery-1.11.3.min.js" type="text/javascript"></script> -->
+        <script type="text/javascript" src="js/flv.js"></script>
+        <script type="text/javascript">
+            $(function() {
+ 
+                if (flvjs.isSupported()) {
+                    var videoElement = document.getElementById('video_el');
+                    var flvPlayer = flvjs.createPlayer({
+                        type: 'flv',
+                        url:'http://111.13.111.242/otttv.bj.chinamobile.com/PLTV/88888888/224/3221226226/1.m3u8'
+                        // url: 'http://120.27.241.217/live?port=1935&app=live&stream=livestreamk'
+                    });
+                    flvPlayer.attachMediaElement(videoElement);
+                    flvPlayer.load();
+                    flvPlayer.play();
+                }
+                var mySrc = "";
+ 
+                function htmlToImage() {
+                    var canvas = document.getElementById("V2I_canvas");
+                    if (!canvas.getContext) {
+                        alert("您的浏览器暂不支持canvas");
+                        return false;
+                    } else {                      
+                        var context = canvas.getContext("2d");
+                        var video = document.getElementById("video_el");
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        return mySrc = canvas.toDataURL("C:\\Users\\ysx\\Desktop\\test_flv\\image\\png.png");
+                    }
+                }
+
+                $("#screen_shot_btn").click(function(event) {
+                    htmlToImage();
+                    $("#image_el").attr("src", mySrc);
+                });
+ 
+                $("#screen_save_btn").click(function() {
+                    htmlToImage();
+                    if ($("#image_el").attr("src") != "") {
+                        downloadFile(mySrc);
+                    } else {
+                        alert("内容为空");
+                    }
+                })
+ 
+                function downloadFile(src) {
+                    var triggerDownload = $("#screen_save_btn").attr("href", src).attr("download", "jietu.png");
+ 
+                }
+            })
+        </script>
+</body>
+</html>
